@@ -14,8 +14,8 @@ platforms:
 suites:
 - name: server_with_storage
   run_list: 
-    - bacula::storage
-    - bacula::server
+    - bacula-backup::storage
+    - bacula-backup::server
   attributes: 
     mysql:
       server_debian_password: test
@@ -23,10 +23,10 @@ suites:
       server_repl_password: test
 - name: client
   run_list: 
-    - bacula::client
+    - bacula-backup::client
   attributes: {}
 - name: monitor
   run_list: 
-    - bacula::server
-    - bacula::bat
+    - bacula-backup::server
+    - bacula-backup::bat
   attributes: {}
