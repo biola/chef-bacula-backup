@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: bacula
+# Cookbook Name:: bacula-backup
 # Recipe:: storage
 #
 # Copyright 2012, computerlyrik

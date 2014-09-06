@@ -1,8 +1,6 @@
-[![Build Status](https://travis-ci.org/computerlyrik/chef-bacula.png?branch=master)](https://travis-ci.org/computerlyrik/chef-bacula)
-
-Code Repo: http://github.com/computerlyrik/chef-bacula
-
 # Description
+
+**NOTE:** This cookbook is forked from the awesome work done by [computerlyrik](http://github.com/computerlyrik/chef-bacula) to add additional features (e.g. tape drive support). It's name has been changed to `bacula-backup` to allow for a unique cookbook name to be used on the Supermarket. It may be renamed to just `bacula` again in the future.
 
 Tested on Ubuntu 12.04 server (should also work on Debian - please report!)
 
@@ -23,25 +21,25 @@ Also supports installation of bacula console to observe your backup progresses.
 ## Recipes
 ### Bacula Director (bacula-dir)
 ```ruby
-bacula::server 
+bacula-backup::server 
 ```
 Central backup server 
 
 ### Bacula File Daemon (bacula-fd)
 ```ruby
-bacula::client
+bacula-backup::client
 ```
 Used by each client to be backed up
 
 ### Bacula Storage Daemon (bacula-sd)
 ```ruby
-bacula::storage (bacula-sd)
+bacula-backup::storage (bacula-sd)
 ```
 For use on storage system
 
 ### Bacula Administration Tool BAT (bacula-console-qt)
 ```ruby
-bacula::bat
+bacula-backup::bat
 ```
 Used for Systems with graphic environment - installs and configures "bat" Bacula qt-console
 
@@ -92,7 +90,7 @@ default['bacula']['sd']['backup_dir'] = "/backup"
 
 ## Backup Job generation
 
-To autogenerate jobs the following expressions need to be ```true``` on ```bacula::client``` machine:
+To autogenerate jobs the following expressions need to be ```true``` on ```bacula-backup::client``` machine:
 
 **Mysql**
 
@@ -113,14 +111,14 @@ node['fqdn'] == "chef.#{node['domain']}"
 ```
 
 ## Default deployment
-- node A => bacula::server
-- node B => bacula::storage (with much storage)
-- node C-Z => bacula::client
+- node A => bacula-backup::server
+- node B => bacula-backup::storage (with much storage)
+- node C-Z => bacula-backup::client
 
 # Examples
 
 ## Howto backup files (do not use in production)
-Set on your ```bacula::client``` node
+Set on your ```bacula-backup::client``` node
 ```ruby
 node.set['bacula']['fd']['files'] = {
   'includes' => ['/']],

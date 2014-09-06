@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: bacula
+# Cookbook Name:: bacula-backup
 # Recipe:: server
 #
 # Copyright 2012, 2013 computerlyrik
@@ -18,7 +18,7 @@
 #
 
 node.set['bacula']['fd']['address'] = "127.0.0.1"
-include_recipe 'bacula::client'
+include_recipe 'bacula-backup::client'
 
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
@@ -69,8 +69,8 @@ if Chef::Config[:solo]
   bacula_clients = []
   bacula_storage = node
 else
-  bacula_clients = search(:node, 'recipes:bacula\:\:client')
-  bacula_storage = search(:node, 'recipes:bacula\:\:storage').first
+  bacula_clients = search(:node, 'recipes:bacula-backup\:\:client')
+  bacula_storage = search(:node, 'recipes:bacula-backup\:\:storage').first
 end
 
 template "/etc/bacula/bacula-dir.conf" do
