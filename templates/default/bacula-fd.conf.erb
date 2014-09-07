@@ -30,10 +30,11 @@ Director {
 #
 FileDaemon {                          # this is me
   Name = <%= node['fqdn'] %>
-  FDport = 9102                  # where we listen for the director
+  FDport = 9102                  # where we listen for the director<% unless node['platform_family'] == 'rhel' %>
   WorkingDirectory = /var/lib/bacula
   Pid Directory = /var/run/bacula
-  Maximum Concurrent Jobs = 20
+  Maximum Concurrent Jobs = 20<% else %>
+  compatible = yes<% end %>
   FDAddress = <%= node['bacula']['fd']['address'] %>
 }
 
