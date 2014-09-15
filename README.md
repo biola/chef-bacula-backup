@@ -29,7 +29,7 @@ Central backup server
 ```ruby
 bacula-backup::client
 ```
-Used by each client to be backed up
+Used by each client to be backed up. Currently supports Ubuntu 12.04/14.04 & RHEL/CentOS 5.
 
 ### Bacula Storage Daemon (bacula-sd)
 ```ruby
