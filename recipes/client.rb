@@ -60,7 +60,7 @@ else
   package "bacula-client"
   
   clientservice = 'bacula-fd'
-  templatefile = '/etc/bareos/bareos-fd.conf'
+  templatefile = '/etc/bacula/bareos-fd.conf'
 end
 
 service clientservice do
