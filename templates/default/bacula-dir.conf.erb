@@ -313,8 +313,17 @@ Storage {
   Media Type = File
 }
 
-
-
+# Any additional storage devices enumerated here
+<% if @bacula_storage['bacula']['sd']['dir-devices'] %><% @bacula_storage['bacula']['sd']['dir-devices'].each do |dirdevice| %>
+Storage {
+  Name = <%= "#{@bacula_storage['fqdn']}-#{dirdevice['Device']}-#{dirdevice['Media Type']}" %>
+  Address = <%= @bacula_storage['bacula']['sd']['address'] %>
+  SDPort = 9103
+  Password = "<%= @bacula_storage['bacula']['sd']['password'] %>"<% dirdevice.sort.each do |key, value| %>
+  <%= key %> = <%= value %><% end %>
+}
+<% end %>
+<% end %>
 
 # Generic catalog service
 Catalog {

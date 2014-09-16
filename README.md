@@ -90,7 +90,7 @@ Configures the Maximum Network Buffer Size for the File-Storage device
 default['bacula']['sd']['file_max_net_buffer'] = "32768"
 ```
 
-Additional storage devices (e.g. tape devices and autochangers) can be specified in the `['bacula']['sd']['devices']` or `['bacula']['sd']['autochangers']` attributes. E.g.:
+Additional storage devices (e.g. tape devices and autochangers) can be specified in the `['bacula']['sd']['devices']` or `['bacula']['sd']['autochangers']` attributes (and then again in `['bacula']['sd']['dir-devices']` -- see below). E.g.:
 ```ruby
 default['bacula']['sd']['devices'] = [
   {
@@ -102,7 +102,7 @@ default['bacula']['sd']['devices'] = [
   }
 ]
 ```
-The contents of these arrays will be directly converted into `Device` or `Autochanger` resources in the storage director configuration file. E.g., the above example would be translated to:
+The contents of these arrays will be directly converted into `Device` or `Autochanger` resources in the storage configuration file. E.g., the above example would be translated to:
 ```
 Device {
   Name = LTO5-1
@@ -110,6 +110,30 @@ Device {
   RemovableMedia = yes
   RandomAccess = no
   Archive Device = /dev/nst1
+}
+```
+Because options for the corresponding director `Storage` resources can vary (e.g., are devices in an autochanger? If yes, don't make their own Storage resource), these need to be manually specified. E.g.:
+```ruby
+default['bacula']['sd']['dir-devices'] = [
+  {
+    "Device": "mytapelibrary",
+    "Media Type": "LTO-5",
+    "AllowCompression": "no",
+    "Autochanger": "yes"
+  }
+]
+```
+Note that the `Name`, `Address`, `SDPort`, and `Password` attributes **must be ommitted** as they are automatically configured. The contents of this array will be directly converted into `Storage` resources in the director configuration file. E.g., the above example would be translated to the following (assuming a server with a FQDN of mystorage.local, ip of 1.2.3.4, and password of 12345):
+```
+Storage {
+  Name = mystorage.local-mytapelibrary-LTO-5
+  Address = 1.2.3.4
+  SDPort = 9103
+  Password = "12345"
+  Device = mytapelibrary
+  Media Type = LTO-6
+  AllowCompression = no
+  Autochanger = yes
 }
 ```
 

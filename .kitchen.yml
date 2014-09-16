@@ -65,6 +65,14 @@ suites:
             "Maximum Network Buffer Size": "65536"
           }
         ]
+        dir-devices: [
+          {
+            "Device": "mytapelibrary",
+            "Media Type": "LTO-5",
+            "AllowCompression": "no",
+            "Autochanger": "yes"
+          }
+        ]
     mysql:
       server_debian_password: test
       server_root_password: test
