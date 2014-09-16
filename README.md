@@ -90,6 +90,29 @@ Configures the Maximum Network Buffer Size for the File-Storage device
 default['bacula']['sd']['file_max_net_buffer'] = "32768"
 ```
 
+Additional storage devices (e.g. tape devices and autochangers) can be specified in the `['bacula']['sd']['devices']` or `['bacula']['sd']['autochangers']` attributes. E.g.:
+```ruby
+default['bacula']['sd']['devices'] = [
+  {
+    "Name": "LTO5-1",
+    "Media Type": "LTO-5",
+    "RemovableMedia": "yes",
+    "RandomAccess": "no",
+    "Archive Device": "/dev/nst1"
+  }
+]
+```
+The contents of these arrays will be directly converted into `Device` or `Autochanger` resources in the storage director configuration file. E.g., the above example would be translated to:
+```
+Device {
+  Name = LTO5-1
+  Media Type = LTO-5
+  RemovableMedia = yes
+  RandomAccess = no
+  Archive Device = /dev/nst1
+}
+```
+
 # Usage
 
 

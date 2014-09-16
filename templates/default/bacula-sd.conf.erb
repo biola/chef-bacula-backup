@@ -60,6 +60,19 @@ Device {
 <% end %>
 }
 
+# Any additional storage devices configured under node['sd']['devices'] will be
+# enumerated here<% if node['bacula']['sd']['autochangers'] %><% node['bacula']['sd']['autochangers'].each do |autochanger| %>
+Autochanger {<% autochanger.each do |key, value| %>
+  <%= key %> = <%= value %><% end %>
+}
+<% end %>
+<% end %><% if node['bacula']['sd']['devices'] %><% node['bacula']['sd']['devices'].each do |device| %>
+Device {<% device.each do |key, value| %>
+  <%= key %> = <%= value %><% end %>
+}
+<% end %>
+<% end %>
+
 # 
 # Send all messages to the Director, 
 # mount messages also are sent to the email address

@@ -22,6 +22,8 @@ suites:
       server_debian_password: test
       server_root_password: test
       server_repl_password: test
+  excludes:
+    - centos-5.10
 - name: client
   run_list: 
     - bacula-backup::client
@@ -31,3 +33,41 @@ suites:
     - bacula-backup::server
     - bacula-backup::bat
   attributes: {}
+  excludes:
+    - centos-5.10
+- name: server_with_tape_storage
+  run_list: 
+    - bacula-backup::storage
+    - bacula-backup::server
+  attributes: 
+    bacula:
+      sd:
+        autochangers: [
+          {
+            "Name": "mytapelibrary",
+            "Device": "LTO5-1",
+            "Changer Command": "\"/etc/bacula/scripts/mtx-changer %c %o %S %a %d\"",
+            "Changer Device": "/dev/sg7"
+          }
+        ]
+        devices: [
+          {
+            "Name": "LTO5-1",
+            "Media Type": "LTO-5",
+            "RemovableMedia": "yes",
+            "RandomAccess": "no",
+            "Archive Device": "/dev/nst1",
+            "Maximum File Size": "5GB",
+            "Autochanger": "yes",
+            "AutomaticMount": "yes",
+            "Alert Command": "\"sh -c 'tapeinfo -f %c |grep TapeAlert|cat'\"",
+            "Maximum Spool Size": "75161927680",
+            "Maximum Network Buffer Size": "65536"
+          }
+        ]
+    mysql:
+      server_debian_password: test
+      server_root_password: test
+      server_repl_password: test
+  excludes:
+    - centos-5.10
