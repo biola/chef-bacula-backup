@@ -31,7 +31,7 @@ Director {
 #   status of the storage daemon
 #
 Director {
-  Name = <%= node['fqdn'] %>-mon
+  Name = backup-mon
   Password = "<%= node['bacula']['sd']['password_monitor'] %>"
   Monitor = yes
 }
