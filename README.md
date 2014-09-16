@@ -85,6 +85,11 @@ Set up destination of File-Storage
 default['bacula']['sd']['backup_dir'] = "/backup"
 ```
 
+Configures the Maximum Network Buffer Size for the File-Storage device
+```ruby
+default['bacula']['sd']['file_max_net_buffer'] = "32768"
+```
+
 # Usage
 
 

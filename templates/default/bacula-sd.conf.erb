@@ -51,6 +51,7 @@ Device {
   AutomaticMount = yes;               # when device opened, read it
   RemovableMedia = no;
   AlwaysOpen = no;
+  Maximum Network Buffer Size = <%= node['bacula']['sd']['file_max_net_buffer'] %>
 <% if @remote_mount %>
   RequiresMount = yes
   MountPoint = <%= node['bacula']['sd']['backup_dir'] %>
