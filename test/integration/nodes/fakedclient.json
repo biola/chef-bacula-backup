@@ -1,0 +1,22 @@
+{
+  "name": "fakedclient",
+  "chef_environment": "_default",
+  "normal": {
+    "bacula": {
+      "fd": {
+        "address": "192.168.88.88",
+        "files": {
+          "includes": [
+            "/etc"
+          ]
+        },
+        "password": "98765"
+      }
+    }
+  },
+  "run_list": ["recipe[bacula-backup::client]"],
+  "automatic": {
+    "fqdn": "fakedclient.vagrantup.com",
+    "ipaddress": "192.168.88.88"
+  }
+}
