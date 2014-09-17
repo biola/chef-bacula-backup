@@ -1,0 +1,1 @@
+../../client/serverspec/bacula_client_spec.rb
