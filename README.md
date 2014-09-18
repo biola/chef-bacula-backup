@@ -1,6 +1,6 @@
 # Description
 
-**NOTE:** This cookbook is forked from the awesome work done by [computerlyrik](http://github.com/computerlyrik/chef-bacula) to add additional features (e.g. tape drive support). It's name has been changed to `bacula-backup` to allow for a unique cookbook name to be used on the Supermarket. It may be renamed to just `bacula` again in the future.
+**NOTE:** This cookbook is forked from the awesome work done by [computerlyrik](http://github.com/computerlyrik/chef-bacula) to add additional features (e.g. tape drive support). Its name has been changed to `bacula-backup` to allow for a unique cookbook name to be used on the Supermarket. It may be renamed to just `bacula` again in the future.
 
 Tested on Ubuntu 12.04 server (should also work on Debian - please report!)
 
