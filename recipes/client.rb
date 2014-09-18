@@ -70,7 +70,6 @@ end
 node.set_unless['bacula']['fd']['password'] = secure_password
 node.set_unless['bacula']['fd']['password_monitor'] = secure_password
 
-# FIXME delete the unneeded bareos-fd file
 template templatefile do
   group node['bacula']['group']
   mode 0640
