@@ -29,9 +29,9 @@ JobDefs {
   Type = Backup
   Level = Incremental
   Schedule = "WeeklyCycle"
-  Storage = File
+  Storage = <%= node['bacula']['dir']['file_storage_device'] %>
   Messages = Standard
-  Pool = File
+  Pool = <%= node['bacula']['dir']['file_storage_pool'] %>
   Priority = 10
   Write Bootstrap = "/var/lib/bacula/%c.bsr"
 }
