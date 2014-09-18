@@ -93,3 +93,8 @@ template "/etc/bacula/common_default_passwords" do
   group node['bacula']['group']
   mode 0640
 end
+
+template "/etc/bacula/bconsole.conf" do
+  group node['bacula']['group']
+  mode 0640
+end
