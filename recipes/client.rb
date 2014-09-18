@@ -22,40 +22,57 @@
 
 case node['platform_family']
 when 'rhel'
-  remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd_packages']['lzo_url'].split('/').last}" do
-    source node['bacula']['fd_packages']['lzo_url']
-    checksum node['bacula']['fd_packages']['lzo_checksum']
+  remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['lzo_url'].split('/').last}" do
+    source node['bacula']['fd']['packages']['lzo_url']
+    checksum node['bacula']['fd']['packages']['lzo_checksum']
   end
   rpm_package "lzo-2.06" do
-    source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd_packages']['lzo_url'].split('/').last}"
+    source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['lzo_url'].split('/').last}"
   end
   
-  remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd_packages']['libfastlz_url'].split('/').last}" do
-    source node['bacula']['fd_packages']['libfastlz_url']
-    checksum node['bacula']['fd_packages']['libfastlz_checksum']
+  remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['libfastlz_url'].split('/').last}" do
+    source node['bacula']['fd']['packages']['libfastlz_url']
+    checksum node['bacula']['fd']['packages']['libfastlz_checksum']
   end
   rpm_package "libfastlz-0.1" do
-    source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd_packages']['libfastlz_url'].split('/').last}"
+    source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['libfastlz_url'].split('/').last}"
   end
   
-  remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd_packages']['bareoscommon_url'].split('/').last}" do
-    source node['bacula']['fd_packages']['bareoscommon_url']
-    checksum node['bacula']['fd_packages']['bareoscommon_checksum']
+  remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['bareoscommon_url'].split('/').last}" do
+    source node['bacula']['fd']['packages']['bareoscommon_url']
+    checksum node['bacula']['fd']['packages']['bareoscommon_checksum']
   end
   rpm_package "bareos-common" do
-    source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd_packages']['bareoscommon_url'].split('/').last}"
+    source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['bareoscommon_url'].split('/').last}"
   end
   
-  remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd_packages']['bareosfd_url'].split('/').last}" do
-    source node['bacula']['fd_packages']['bareosfd_url']
-    checksum node['bacula']['fd_packages']['bareosfd_checksum']
+  remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['bareosfd_url'].split('/').last}" do
+    source node['bacula']['fd']['packages']['bareosfd_url']
+    checksum node['bacula']['fd']['packages']['bareosfd_checksum']
   end
   rpm_package "bareos-filedaemon" do
-    source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd_packages']['bareosfd_url'].split('/').last}"
+    source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['bareosfd_url'].split('/').last}"
   end
   
   clientservice = 'bareos-fd'
   templatefile = '/etc/bareos/bareos-fd.conf'
+when 'windows'
+  clientservice = 'Bacula-fd'
+  templatefile = 'c:/program files/bacula/bacula-fd.conf'
+  # Using the windows cookbook lwrp to install the fd, as they are distributed as EXEs
+  include_recipe 'windows::default'
+  windows_package node['bacula']['fd']['packages']['win_displayname'] do
+    if node['kernel']['machine'] == "x86_64"
+      source node['bacula']['fd']['packages']['win_url']
+      checksum node['bacula']['fd']['packages']['win_checksum']
+    else
+      source node['bacula']['fd']['packages']['win_url_32bit']
+      checksum node['bacula']['fd']['packages']['win_checksum_32bit']
+    end
+    action :install
+    options "/S"
+    installer_type :custom
+  end
 else
   package "bacula-client"
   
@@ -71,7 +88,7 @@ node.set_unless['bacula']['fd']['password'] = secure_password
 node.set_unless['bacula']['fd']['password_monitor'] = secure_password
 
 template templatefile do
-  group node['bacula']['group']
+  group node['bacula']['group'] unless node['platform_family'] == 'windows'
   mode 0640
   source 'bacula-fd.conf.erb'
   notifies :restart, "service[#{clientservice}]"

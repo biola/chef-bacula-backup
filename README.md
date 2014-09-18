@@ -2,7 +2,7 @@
 
 **NOTE:** This cookbook is forked from the awesome work done by [computerlyrik](http://github.com/computerlyrik/chef-bacula) to add additional features (e.g. tape drive support). Its name has been changed to `bacula-backup` to allow for a unique cookbook name to be used on the Supermarket. It may be renamed to just `bacula` again in the future.
 
-Tested on Ubuntu 12.04 server (should also work on Debian - please report!)
+Tested on Ubuntu 12.04 server (should also work on Debian - please report!). Also supports file daemon (e.g. 'client') installs on RHEL 5 & Windows.
 
 Supports File backup on a dedicated storage server with a single bacula director and multiple clients to be backed up.
 
@@ -29,7 +29,7 @@ Central backup server
 ```ruby
 bacula-backup::client
 ```
-Used by each client to be backed up. Currently supports Ubuntu 12.04/14.04 & RHEL/CentOS 5.
+Used by each client to be backed up. Currently supports Ubuntu 12.04/14.04, RHEL/CentOS 5, and MS Windows.
 
 ### Bacula Storage Daemon (bacula-sd)
 ```ruby
@@ -45,12 +45,7 @@ Used for Systems with graphic environment - installs and configures "bat" Bacula
 
 # Requirements
 
-Cookbooks:
-```ruby
-mysql
-database
-openssl #for password generation
-```
+See metadata for cookbook dependencies.
 
 #Attributes
 

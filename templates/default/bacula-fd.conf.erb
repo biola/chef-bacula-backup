@@ -1,7 +1,7 @@
 #
 # Default  Bacula File Daemon Configuration file
 #
-#  For Bacula release 5.2.5 (26 January 2012) -- ubuntu 12.04
+#  Tested with Bacula release 5.2.X
 #
 # There is not much to change here except perhaps the
 # File daemon Name to
@@ -30,10 +30,11 @@ Director {
 #
 FileDaemon {                          # this is me
   Name = <%= node['fqdn'] %>
-  FDport = 9102                  # where we listen for the director<% unless node['platform_family'] == 'rhel' %>
-  WorkingDirectory = /var/lib/bacula
-  Pid Directory = /var/run/bacula
-  Maximum Concurrent Jobs = 20<% else %>
+  FDport = 9102                  # where we listen for the director
+  WorkingDirectory = "<%= node['bacula']['fd']['working_directory'] %>"
+  Pid Directory = "<%= node['bacula']['fd']['pid_directory'] %>"
+  Maximum Concurrent Jobs = <%= node['bacula']['fd']['max_con_jobs'] %><% if node['bacula']['fd']['max_network_buffer'] -%>
+  Maximum Network Buffer Size = <%= node['bacula']['fd']['max_network_buffer'] %><% end -%><% if node['platform_family'] == 'rhel' %>
   compatible = yes<% end %>
   FDAddress = <%= node['bacula']['fd']['address'] %>
 }

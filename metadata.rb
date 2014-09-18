@@ -6,12 +6,12 @@ description      "Installs and autoconfigures bacula backup system"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "1.3.0"
 
-%w{ ubuntu debian redhat }.each do |os|
+%w{ ubuntu debian redhat windows }.each do |os|
   supports os
 end
 
 depends        "mysql", "~> 5.5"
 
-%w{ openssl database }.each do |dep|
+%w{ openssl database windows }.each do |dep|
   depends dep
 end
