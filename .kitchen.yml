@@ -44,6 +44,17 @@ suites:
     - bacula-backup::server
   attributes: 
     bacula:
+      dir:
+        pools: [
+        {
+          "Name": "MyFilePool",
+          "Volume Retention": "365 days",
+          "Storage": "\"File\"",
+          "Pool Type": "Backup",
+          "RecyclePool": "Scratch",
+          "Recycle Oldest Volume": "yes"
+        }
+      ]
       sd:
         autochangers: [
           {

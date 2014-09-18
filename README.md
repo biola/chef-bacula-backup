@@ -72,6 +72,32 @@ node['bacula']['volume_max'] = 20
 node['bacula']['label_format'] = "BaculaFile"
 ```
 
+Additional storage pools (beyond the built-in File & Default pools) can be specified as arrays in the `['bacula']['dir']['pools']` attribute. E.g.:
+```ruby
+default['bacula']['dir']['pools'] = [
+  {
+    "Name": "MyTapePool",
+    "Volume Retention": "365 days",
+    "Storage": "\"mystorage.local-mytapelibrary-LTO-5\"",
+    "Pool Type": "Backup",
+    "RecyclePool": "Scratch",
+    "Recycle Oldest Volume": "yes"
+  }
+]
+```
+The contents of this array will be directly converted into `Pool` resources in the storage configuration file. E.g., the above example would be translated to:
+```
+Pool {
+  Name = MyTapePool
+  Volume Retention = 365 days
+  Storage = "mystorage.local-mytapelibrary-LTO-5"
+  Pool Type = Backup
+  RecyclePool = Scratch
+  Recycle Oldest Volume = yes
+}
+```
+
+
 **client.rb**
 
 Set files to be backed up (see Usage below)

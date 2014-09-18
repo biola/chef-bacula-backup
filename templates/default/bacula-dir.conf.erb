@@ -401,6 +401,14 @@ Pool {
   Pool Type = Backup
 }
 
+# Any additional storage pools will be enumerated here
+<% if node['bacula']['dir']['pools'] %><% node['bacula']['dir']['pools'].each do |pool| %>
+Pool {<% pool.sort.each do |key, value| %>
+  <%= key %> = <%= value %><% end %>
+}
+<% end %>
+<% end %>
+
 #
 # Restricted console used by tray-monitor to get the status of the director
 #
