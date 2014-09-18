@@ -18,7 +18,7 @@ Director {                            # define myself
   QueryFile = "/etc/bacula/scripts/query.sql"
   WorkingDirectory = "/var/lib/bacula"
   PidDirectory = "/var/run/bacula"
-  Maximum Concurrent Jobs = 1
+  Maximum Concurrent Jobs = <%= node['bacula']['dir']['max_concurrent_jobs'] %>
   Password = "<%= node['bacula']['dir']['password'] %>"         # Console password
   Messages = Daemon
   DirAddress = <%= node['bacula']['dir']['address'] %>
@@ -237,7 +237,7 @@ Job {
     Job Retention = 6 months            # six months
     AutoPrune = yes                     # Prune expired Jobs/Files
   }
-
+  
   <% if (backup_files = client['bacula']['fd']['files'])  %>
       # List of files to be backed up
       FileSet {
@@ -313,7 +313,7 @@ Storage {
   Media Type = File
 }
 
-# Any additional storage devices enumerated here
+# Any additional storage devices will be enumerated here
 <% if @bacula_storage['bacula']['sd']['dir-devices'] %><% @bacula_storage['bacula']['sd']['dir-devices'].each do |dirdevice| %>
 Storage {
   Name = <%= "#{@bacula_storage['fqdn']}-#{dirdevice['Device']}-#{dirdevice['Media Type']}" %>

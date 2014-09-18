@@ -64,6 +64,11 @@ node['bacula']['group']
 
 **server.rb**
 
+Set general backup properties
+```ruby
+node['bacula']['dir']['max_concurrent_jobs'] = "1"
+```
+
 Set properties for File based backup
 ```ruby
 node['bacula']['volume_size'] = "1G"
