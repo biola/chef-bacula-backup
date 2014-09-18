@@ -38,8 +38,6 @@ node.save
 include_recipe "mysql::server"
 include_recipe "database::mysql"
 mysql_connection_info = { :host => "localhost", :username => 'root', :password => node['mysql']['server_root_password'] }
-log "DEBUG: SERVER ROOT PASSWORD IS: #{node['mysql']['server_root_password']}"
-
 
 mysql_database_user node['bacula']['mysql_user'] do
   password  node['bacula']['mysql_password']
