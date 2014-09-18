@@ -226,7 +226,7 @@ Job {
 }
 
 # Client (File Services) to backup
-<% @bacula_clients.each do |client| %>
+<% @bacula_clients.sort.each do |client| %>
   Client {
     Name = <%= client['fqdn'] %>
     Address = <%= client['bacula']['fd']['address'] %>
@@ -314,7 +314,7 @@ Storage {
 }
 
 # Any additional storage devices will be enumerated here
-<% if @bacula_storage['bacula']['sd']['dir-devices'] %><% @bacula_storage['bacula']['sd']['dir-devices'].each do |dirdevice| %>
+<% if @bacula_storage['bacula']['sd']['dir-devices'] %><% @bacula_storage['bacula']['sd']['dir-devices'].sort_by { |hsh| hsh['Device'] }.each do |dirdevice| %>
 Storage {
   Name = <%= "#{@bacula_storage['fqdn']}-#{dirdevice['Device']}-#{dirdevice['Media Type']}" %>
   Address = <%= @bacula_storage['bacula']['sd']['address'] %>
@@ -402,7 +402,7 @@ Pool {
 }
 
 # Any additional storage pools will be enumerated here
-<% if node['bacula']['dir']['pools'] %><% node['bacula']['dir']['pools'].each do |pool| %>
+<% if node['bacula']['dir']['pools'] %><% node['bacula']['dir']['pools'].sort_by { |hsh| hsh['Name'] }.each do |pool| %>
 Pool {<% pool.sort.each do |key, value| %>
   <%= key %> = <%= value %><% end %>
 }
