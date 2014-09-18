@@ -20,8 +20,8 @@ Director {                            # define myself
   PidDirectory = "/var/run/bacula"
   Maximum Concurrent Jobs = <%= node['bacula']['dir']['max_concurrent_jobs'] %>
   Password = "<%= node['bacula']['dir']['password'] %>"         # Console password
-  Messages = Daemon
-  DirAddress = <%= node['bacula']['dir']['address'] %>
+  Messages = Daemon<% if node['bacula']['dir']['address']  %>
+  DirAddress = <%= node['bacula']['dir']['address'] %><% end  %>
 }
 
 JobDefs {

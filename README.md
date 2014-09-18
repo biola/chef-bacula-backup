@@ -67,6 +67,7 @@ node['bacula']['group']
 Set general backup properties
 ```ruby
 node['bacula']['dir']['max_concurrent_jobs'] = "1"
+node['bacula']['dir']['address'] = nil # if set, causes to director to bind to the specified address
 ```
 
 Set properties for File based backup
