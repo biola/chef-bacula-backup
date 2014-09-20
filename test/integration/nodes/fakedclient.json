@@ -10,7 +10,43 @@
             "/etc"
           ]
         },
-        "password": "98765"
+        "filesets": [
+          [
+            "Name = \"fakedclient-accurate-opt\"",
+            "Ignore FileSet Changes = yes",
+            "Include {",
+            "  Options {",
+            "    signature = MD5",
+            "  }",
+            "File = /opt",
+            "}"
+          ]
+        ],
+        "jobs": [
+          {
+            "Name": "\"fakedclient-wednesdays\"",
+            "Client": "fakedclient.vagrantup.com",
+            "Type": "Backup",
+            "Accurate": "yes",
+            "Level": "Incremental",
+            "Messages": "Standard",
+            "FileSet": "\"fakedclient-accurate-opt\"",
+            "Schedule": "\"fakedclient-wednesday\"",
+            "Pool": "Default",
+            "Storage": "File"
+          }
+        ],
+        "password": "98765",
+        "schedules": [
+          [
+            "Name = \"fakedclient-wednesday\"",
+            "Run = Level=Full 1st wed at 18:00",
+            "Run = Level=Incremental 2nd wed at 18:00",
+            "Run = Level=Incremental 3rd wed at 18:00",
+            "Run = Level=Incremental 4th wed at 18:00",
+            "Run = Level=Incremental 5th wed at 18:00"
+          ]
+        ]
       }
     }
   },

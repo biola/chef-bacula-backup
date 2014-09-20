@@ -196,7 +196,7 @@ node['fqdn'] == "chef.#{node['domain']}"
 
 # Examples
 
-## Howto backup files (do not use in production)
+## Simple file backup
 Set on your ```bacula-backup::client``` node
 ```ruby
 node.set['bacula']['fd']['files'] = {
@@ -205,16 +205,96 @@ node.set['bacula']['fd']['files'] = {
 }
 ```
 
+## Custom Backups
 
-## Howto change the backup cycle
-To change the backup cycle make changes in templates/default/bacula-dir.conf
+When more granual control over backup jobs/filesets/schedules is needed, they can be specified as arrays on the clients' `['bacula']['fd']['jobs']`, `['bacula']['fd']['filesets']`, & `['bacula']['fd']['schedules']` attributes. E.g.:
+
+```ruby
+
+"default_attributes": {
+  "bacula": {
+    "fd": {
+      "filesets": [
+        [
+          "Name = \"myclient-accurate-opt\"",
+          "Ignore FileSet Changes = yes",
+          "Include {",
+          "  Options {",
+          "    signature = MD5",
+          "  }",
+          "File = /opt",
+          "}"
+        ]
+      ],
+      "jobs": [
+        {
+          "Name": "\"myclient-wednesdays\"",
+          "Client": "myclient.local",
+          "Type": "Backup",
+          "Accurate": "yes",
+          "Level": "Incremental",
+          "Messages": "Standard",
+          "FileSet": "\"myclient-accurate-opt\"",
+          "Schedule": "\"myclient-wednesday\"",
+          "Pool": "Default",
+          "Storage": "File"
+        }
+      ],
+      "schedules": [
+        [
+          "Name = \"myclient-wednesday\"",
+          "Run = Level=Full 1st wed at 18:00",
+          "Run = Level=Incremental 2nd wed at 18:00",
+          "Run = Level=Incremental 3rd wed at 18:00",
+          "Run = Level=Incremental 4th wed at 18:00",
+          "Run = Level=Incremental 5th wed at 18:00"
+        ]
+      ]
+    }
+  }
+}
+```
+Note that `schedules` and `filesets` are specified as raw arrays under their parent array (because of their varied and often complex structure), and `jobs` are specified are hashes under their parent array. The above example will generate the following director entries:
+
+```
+FileSet {
+  Name = "myclient-accurate-opt"
+  Ignore FileSet Changes = yes
+  Include {
+    Options {
+      signature = MD5
+    }
+  File = /opt
+  }
+}
+
+Job {
+  Name = "myclient-wednesdays"
+  Client = myclient.local
+  Type = Backup
+  Accurate = yes
+  Level = Incremental
+  Messages = Standard
+  FileSet = "myclient-accurate-opt"
+  Schedule = "myclient-wednesday"
+  Pool = Default
+  Storage = File
+}
+
+Schedule {
+  Name = "myclient-wednesday"
+  Run = Level=Full 1st wed at 18:00
+  Run = Level=Incremental 2nd wed at 18:00
+  Run = Level=Incremental 3rd wed at 18:00
+  Run = Level=Incremental 4th wed at 18:00
+  Run = Level=Incremental 5th wed at 18:00
+}
+```
 
 
-# Todo/Ideas
-- Add restore jobs
-- more datastores (postgresql, sqlite)
-- make attributes out of the listening port
-- make mailing work
+
+
+
 
 # Contact
 see metadata.rb

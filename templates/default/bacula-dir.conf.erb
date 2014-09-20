@@ -293,6 +293,31 @@ Job {
         ClientRunBeforeJob = "/usr/local/sbin/backupchef"
       }
   <% end %>
+  <% if client['bacula']['fd']['jobs']  %># Custom jobs for client <%= client['fqdn'] %> are enumerated below
+<% client['bacula']['fd']['jobs'].sort_by { |hsh| hsh['Name'] }.each do |job|  %>
+      Job {<% job.sort.each do |key, value| %>
+        <%= key %> = <%= value %><% end %><% unless job.has_key?('Client') %>
+        Client = <%= client['fqdn'] %><% end %>
+      }
+  <% end %>
+  <% end %>
+
+  <% if client['bacula']['fd']['filesets']  %># Custom filesets for client <%= client['fqdn'] %> are enumerated below
+<% client['bacula']['fd']['filesets'].each do |fileset|  %>
+      FileSet {<% fileset.each do |value| %>
+        <%= value %><% end %>
+      }
+  <% end %>
+  <% end %>
+
+  <% if client['bacula']['fd']['schedules']  %># Custom schedules for client <%= client['fqdn'] %> are enumerated below
+<% client['bacula']['fd']['schedules'].each do |schedule|  %>
+      Schedule {<% schedule.each do |value| %>
+        <%= value %><% end %>
+      }
+  <% end %>
+
+  <% end %>
 <% end %>
 
 
