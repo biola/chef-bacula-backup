@@ -365,9 +365,9 @@ Messages {
 #  tell (most) people that its coming from an automated source.
 
 #
-  mailcommand = "/usr/lib/bacula/bsmtp -h localhost -f \"\(Bacula\) \< %r\ >\" -s \"Bacula: %t %e of %c %l\" %r"
-  operatorcommand = "/usr/lib/bacula/bsmtp -h localhost -f \"\(Bacula\) \< %r \>\" -s \"Bacula: Intervention needed for %j\" %r"
-  mail = <%=node['bacula']['messages']['mail']%> = all, !skipped
+  mailcommand = "/usr/lib/bacula/bsmtp -h <%=node['bacula']['messages']['mail_server']%> -f \"\(Bacula\) \< %r\ >\" -s \"Bacula: %t %e of %c %l\" %r"
+  operatorcommand = "/usr/lib/bacula/bsmtp -h <%=node['bacula']['messages']['mail_server']%> -f \"\(Bacula\) \< %r \>\" -s \"Bacula: Intervention needed for %j\" %r"
+  mail = <%=node['bacula']['messages']['mail']%> = <%=node['bacula']['messages']['mail_to_send']%>
   operator = <%=node['bacula']['messages']['operator']%> = mount
   console = all, !skipped, !saved
 #
