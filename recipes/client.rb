@@ -81,7 +81,8 @@ else
 end
 
 service clientservice do
-  supports :restart => true
+  supports :status => true, :start => true, :stop => true, :restart => true
+  action :start
 end
 
 node.set_unless['bacula']['fd']['password'] = secure_password
