@@ -266,15 +266,6 @@ Job {
       }
   <% end %>
   
-  <% if client['mysql'] && client['mysql']['server_root_password'] %>
-      Job {
-        Name = "Backup_<%= client['fqdn'] %>_mysql"
-        JobDefs = "DefaultJob"
-        Client = <%= client['fqdn'] %>
-        FileSet = "Fileset_mysql"
-        ClientRunBeforeJob = "/usr/local/sbin/backupdbs"
-      }
-  <% end %>
   <% if client['openldap'] && client['openldap']['slapd_type'] == "master" %>
       Job {
         Name = "Backup_<%= client['fqdn'] %>_ldap"
