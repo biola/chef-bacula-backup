@@ -76,6 +76,7 @@ FileSet {
   Include {
     Options {
       signature = MD5
+      compression = LZO
     }
 #    
 #  Put your list of files here, preceded by 'File =', one per line
@@ -131,6 +132,7 @@ FileSet {
   Include {
     Options {
       signature = MD5
+      compression = LZO
     }
     File = "/var/lib/bacula/bacula.sql"
   }
@@ -158,6 +160,7 @@ FileSet {
   Include {
     Options {
       signature = MD5
+      compression = LZO
     }
     File = /var/local/mysqlbackups
   }
@@ -169,6 +172,7 @@ FileSet {
   Include {
     Options {
       signature = MD5
+      compression = LZO
     }
     File = /var/local/ldapbackups
   }
@@ -180,6 +184,7 @@ FileSet {
   Include {
     Options {
       signature = MD5
+      compression = LZO
     }
     File = /var/local/chefbackups
   }
@@ -245,6 +250,7 @@ Job {
         Include {
           Options {
             signature = MD5
+            compression = LZO
           }
           <% backup_files['includes'].each do |file| %>
           File = <%= file %>
