@@ -73,7 +73,9 @@ end
 ################### Install and configure bacula
 
 package "bacula-director-mysql"
-service "bacula-director"
+service "bacula-director" do
+  supports :status => true, :restart => true, :reload => true
+end
 
 if Chef::Config[:solo]
   bacula_clients = []
@@ -92,7 +94,7 @@ end
 template "/etc/bacula/bacula-dir.conf" do
   group node['bacula']['group']
   mode 0640
-  notifies :restart, "service[bacula-director]"
+  notifies :reload, "service[bacula-director]"
   variables(
       :bacula_clients => bacula_clients,
       :bacula_storage => bacula_storage
