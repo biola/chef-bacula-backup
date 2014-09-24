@@ -110,3 +110,9 @@ template "/etc/bacula/bconsole.conf" do
   group node['bacula']['group']
   mode 0640
 end
+
+# If still using the dummy query.sql shipped with Bacula, replace it with sample version
+execute "deploy sample queries" do
+  command 'gunzip -c /usr/share/doc/bacula-common/examples/sample-query.sql.gz > /etc/bacula/scripts/query.sql'
+  only_if { Digest::SHA2.file('/etc/bacula/scripts/query.sql').hexdigest == '571e5331dfa5ed4d693fbb31a072886f75a0d4623fd0c946433dbc3df53fbd12' }
+end
