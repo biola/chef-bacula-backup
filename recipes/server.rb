@@ -84,10 +84,10 @@ else
   # Check to see if running under Test Kitchen
   if node['dev_mode']
     bacula_clients = search(:node, 'name:fakedclient')
-    bacula_storage = node
+    bacula_storage = [node]
   else
     bacula_clients = search(:node, 'recipes:bacula-backup\:\:client')
-    bacula_storage = search(:node, 'recipes:bacula-backup\:\:storage').first
+    bacula_storage = search(:node, 'recipes:bacula-backup\:\:storage')
   end
 end
 

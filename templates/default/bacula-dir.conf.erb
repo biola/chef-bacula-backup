@@ -324,28 +324,36 @@ Job {
 
 
 
-# Definition of file storage servers
+# Definition of storage servers
+# If a storage daemon is installed alongside the director,
+# its file storage resource will be called 'File' (to
+# remain consistent with previous installations). Other
+# storage daemons will be called fqdn-file
+<% @bacula_storage.sort.each do |storage_daemon| %>
 Storage {
-  Name = File
+  <% if storage_daemon['fqdn'] == node['fqdn'] -%>Name = File<% else -%>Name = <%= storage_daemon['fqdn'] %>-file<% end -%>
 # Do not use "localhost" here    
-  Address = <%= @bacula_storage['bacula']['sd']['address'] %>                # N.B. Use a fully qualified name here
+  Address = <%= storage_daemon['bacula']['sd']['address'] %>                # N.B. Use a fully qualified name here
   SDPort = 9103
-  Password = "<%= @bacula_storage['bacula']['sd']['password'] %>"
+  Password = "<%= storage_daemon['bacula']['sd']['password'] %>"
   Device = FileStorage
   Media Type = File
 }
 
 # Any additional storage devices will be enumerated here
-<% if @bacula_storage['bacula']['sd']['dir-devices'] %><% @bacula_storage['bacula']['sd']['dir-devices'].sort_by { |hsh| hsh['Device'] }.each do |dirdevice| %>
+<% if storage_daemon['bacula']['sd']['dir-devices'] %><% storage_daemon['bacula']['sd']['dir-devices'].sort_by { |hsh| hsh['Device'] }.each do |dirdevice| %>
 Storage {
-  Name = <%= "#{@bacula_storage['fqdn']}-#{dirdevice['Device']}-#{dirdevice['Media Type']}" %>
-  Address = <%= @bacula_storage['bacula']['sd']['address'] %>
+  Name = <%= "#{storage_daemon['fqdn']}-#{dirdevice['Device']}-#{dirdevice['Media Type']}" %>
+  Address = <%= storage_daemon['bacula']['sd']['address'] %>
   SDPort = 9103
-  Password = "<%= @bacula_storage['bacula']['sd']['password'] %>"<% dirdevice.sort.each do |key, value| %>
+  Password = "<%= storage_daemon['bacula']['sd']['password'] %>"<% dirdevice.sort.each do |key, value| %>
   <%= key %> = <%= value %><% end %>
 }
 <% end %>
 <% end %>
+
+<% end %>
+
 
 # Generic catalog service
 Catalog {
