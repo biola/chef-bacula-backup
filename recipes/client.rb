@@ -89,8 +89,10 @@ node.set_unless['bacula']['fd']['password'] = secure_password
 node.set_unless['bacula']['fd']['password_monitor'] = secure_password
 
 template templatefile do
-  group node['bacula']['group'] unless node['platform_family'] == 'windows'
-  mode 0640
+  unless node['platform_family'] == 'windows'
+    group node['bacula']['group'] 
+    mode 0640
+  end
   source 'bacula-fd.conf.erb'
   notifies :restart, "service[#{clientservice}]"
 end
