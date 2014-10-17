@@ -381,7 +381,7 @@ Messages {
 #
   mailcommand = "/usr/lib/bacula/bsmtp -h <%=node['bacula']['messages']['mail_server']%> -f \"\(Bacula\) \< %r\ >\" -s \"Bacula: %t %e of %c %l\" %r"
   operatorcommand = "/usr/lib/bacula/bsmtp -h <%=node['bacula']['messages']['mail_server']%> -f \"\(Bacula\) \< %r \>\" -s \"Bacula: Intervention needed for %j\" %r"
-  mail = <%=node['bacula']['messages']['mail']%> = <%=node['bacula']['messages']['mail_to_send']%>['bacula']['fd']['client_name']
+  mail = <%=node['bacula']['messages']['mail']%> = <%=node['bacula']['messages']['mail_to_send']%>
   operator = <%=node['bacula']['messages']['operator']%> = mount
   console = all, !skipped, !saved
 #
@@ -423,7 +423,7 @@ Pool {
   Maximum Volume Bytes = <%= node['bacula']['volume_size'] %>          # Limit Volume size to something reasonable
   Maximum Volumes = <%= node['bacula']['volume_max'] %>               # Limit number of Volumes in Pool
   LabelFormat = "<%= node['bacula']['label_format'] %>"
-}['bacula']['fd']['client_name']
+}
 
 # Scratch pool definition
 Pool {
