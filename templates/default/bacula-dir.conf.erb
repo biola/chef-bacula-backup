@@ -233,7 +233,7 @@ Job {
 # Client (File Services) to backup
 <% @bacula_clients.sort.each do |client| %>
   Client {
-    Name = <%= client['fqdn'] %>
+    Name = <%= client['bacula']['fd']['client_name'] %>
     Address = <%= client['bacula']['fd']['address'] %>
     FDPort = 9102
     Catalog = MyCatalog
@@ -246,7 +246,7 @@ Job {
   <% if (backup_files = client['bacula']['fd']['files'])  %>
       # List of files to be backed up
       FileSet {
-        Name = "Fileset_<%= client['fqdn'] %>"
+        Name = "Fileset_<%= client['bacula']['fd']['client_name'] %>"
         Include {
           Options {
             signature = MD5
@@ -265,41 +265,41 @@ Job {
         <% end %>
       }
       Job {
-        Name = "Backup_<%= client['fqdn'] %>_files"
+        Name = "Backup_<%= client['bacula']['fd']['client_name'] %>_files"
         JobDefs = "DefaultJob"
-        Client = <%= client['fqdn'] %>
-        FileSet = "Fileset_<%= client['fqdn'] %>"
+        Client = <%= client['bacula']['fd']['client_name'] %>
+        FileSet = "Fileset_<%= client['bacula']['fd']['client_name'] %>"
       }
   <% end %>
   
   <% if client['openldap'] && client['openldap']['slapd_type'] == "master" %>
       Job {
-        Name = "Backup_<%= client['fqdn'] %>_ldap"
+        Name = "Backup_<%= client['bacula']['fd']['client_name'] %>_ldap"
         JobDefs = "DefaultJob"
-        Client = <%= client['fqdn'] %>
+        Client = <%= client['bacula']['fd']['client_name'] %>
         FileSet = "Fileset_ldap"
         ClientRunBeforeJob = "/usr/local/sbin/backupldap"
       }
   <% end %>
-  <% if client['fqdn'] == "chef.#{client['domain']}" %>
+  <% if client['bacula']['fd']['client_name'] == "chef.#{client['domain']}" %>
       Job {
-        Name = "Backup_<%= client['fqdn'] %>_chef"
+        Name = "Backup_<%= client['bacula']['fd']['client_name'] %>_chef"
         JobDefs = "DefaultJob"
-        Client = <%= client['fqdn'] %>
+        Client = <%= client['bacula']['fd']['client_name'] %>
         FileSet = "Fileset_chef"
         ClientRunBeforeJob = "/usr/local/sbin/backupchef"
       }
   <% end %>
-  <% if client['bacula']['fd']['jobs']  %># Custom jobs for client <%= client['fqdn'] %> are enumerated below
+  <% if client['bacula']['fd']['jobs']  %># Custom jobs for client <%= client['bacula']['fd']['client_name'] %> are enumerated below
 <% client['bacula']['fd']['jobs'].sort_by { |hsh| hsh['Name'] }.each do |job|  %>
       Job {<% job.sort.each do |key, value| %>
         <%= key %> = <%= value %><% end %><% unless job.has_key?('Client') %>
-        Client = <%= client['fqdn'] %><% end %>
+        Client = <%= client['bacula']['fd']['client_name'] %><% end %>
       }
   <% end %>
   <% end %>
 
-  <% if client['bacula']['fd']['filesets']  %># Custom filesets for client <%= client['fqdn'] %> are enumerated below
+  <% if client['bacula']['fd']['filesets']  %># Custom filesets for client <%= client['bacula']['fd']['client_name'] %> are enumerated below
 <% client['bacula']['fd']['filesets'].each do |fileset|  %>
       FileSet {<% fileset.each do |value| %>
         <%= value %><% end %>
@@ -307,7 +307,7 @@ Job {
   <% end %>
   <% end %>
 
-  <% if client['bacula']['fd']['schedules']  %># Custom schedules for client <%= client['fqdn'] %> are enumerated below
+  <% if client['bacula']['fd']['schedules']  %># Custom schedules for client <%= client['bacula']['fd']['client_name'] %> are enumerated below
 <% client['bacula']['fd']['schedules'].each do |schedule|  %>
       Schedule {<% schedule.each do |value| %>
         <%= value %><% end %>
@@ -381,7 +381,7 @@ Messages {
 #
   mailcommand = "/usr/lib/bacula/bsmtp -h <%=node['bacula']['messages']['mail_server']%> -f \"\(Bacula\) \< %r\ >\" -s \"Bacula: %t %e of %c %l\" %r"
   operatorcommand = "/usr/lib/bacula/bsmtp -h <%=node['bacula']['messages']['mail_server']%> -f \"\(Bacula\) \< %r \>\" -s \"Bacula: Intervention needed for %j\" %r"
-  mail = <%=node['bacula']['messages']['mail']%> = <%=node['bacula']['messages']['mail_to_send']%>
+  mail = <%=node['bacula']['messages']['mail']%> = <%=node['bacula']['messages']['mail_to_send']%>['bacula']['fd']['client_name']
   operator = <%=node['bacula']['messages']['operator']%> = mount
   console = all, !skipped, !saved
 #
@@ -423,7 +423,7 @@ Pool {
   Maximum Volume Bytes = <%= node['bacula']['volume_size'] %>          # Limit Volume size to something reasonable
   Maximum Volumes = <%= node['bacula']['volume_max'] %>               # Limit number of Volumes in Pool
   LabelFormat = "<%= node['bacula']['label_format'] %>"
-}
+}['bacula']['fd']['client_name']
 
 # Scratch pool definition
 Pool {

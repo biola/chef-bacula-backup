@@ -29,7 +29,7 @@ Director {
 # "Global" File daemon configuration specifications
 #
 FileDaemon {                          # this is me
-  Name = <%= node['fqdn'] %>
+  Name = <%= node['bacula']['fd']['client_name'] %>
   FDport = 9102                  # where we listen for the director
   WorkingDirectory = "<%= node['bacula']['fd']['working_directory'] %>"
   Pid Directory = "<%= node['bacula']['fd']['pid_directory'] %>"

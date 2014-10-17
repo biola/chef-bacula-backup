@@ -1,4 +1,5 @@
 default['bacula']['fd']['address'] = node['ipaddress']
+default['bacula']['fd']['client_name'] = node['fqdn']
 
 case node['platform']
 when 'windows'
