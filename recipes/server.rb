@@ -18,9 +18,9 @@
 #
 
 # Provide an easy search for clients to search for the director
-node.set['bacula']['is_director'] = true
+node.default['bacula']['is_director'] = true
 
-node.set['bacula']['fd']['address'] = "127.0.0.1"
+node.default['bacula']['fd']['address'] = "127.0.0.1"
 include_recipe 'bacula-backup::client'
 
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
