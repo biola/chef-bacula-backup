@@ -1,13 +1,10 @@
 require 'serverspec'
+# Set backend type
+set :backend, :exec
+# Don't include Specinfra::Helper::DetectOS
 
-include Serverspec::Helper::Exec
-include Serverspec::Helper::DetectOS
+set :path, '/sbin:/usr/sbin:$PATH'
 
-RSpec.configure do |c|
-  c.before :all do
-    c.path = '/sbin:/usr/sbin'
-  end
-end
 
 describe "Bacula Client Daemon" do
 

@@ -5,6 +5,7 @@
     "bacula": {
       "fd": {
         "address": "192.168.88.88",
+        "client_name": "fakedclient.vagrantup.com",
         "files": {
           "includes": [
             "/etc"
