@@ -68,6 +68,8 @@ mysql_database "bacula" do
   sql { ::File.open("/etc/bacula/mysql_tables").read }
   action :nothing
   subscribes :query, "mysql_database[#{node['bacula']['mysql_user']}]"
+  # Need to restart the director service after the initial db creation
+  notifies :restart, "service[bacula-director]"
 end
 
 ################### Install and configure bacula
