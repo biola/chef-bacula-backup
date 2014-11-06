@@ -4,7 +4,7 @@ maintainer_email "troy.ready@biola.edu"
 license          "Apache 2.0"
 description      "Installs and autoconfigures bacula backup system"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "1.7.2"
+version          "1.7.3"
 
 %w{ ubuntu debian redhat windows }.each do |os|
   supports os
