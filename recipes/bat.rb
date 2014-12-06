@@ -19,7 +19,7 @@
 
 package "bacula-console-qt"
 
-if Chef::Config[:solo]
+if Chef::Config[:solo] or node['dev_mode']
   n = node
 else
   n = search(:node, 'run_list:recipe\[bacula\:\:server\]').first

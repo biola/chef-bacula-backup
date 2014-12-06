@@ -78,7 +78,7 @@ FileSet {
       signature = MD5
       compression = LZO
     }
-#    
+#
 #  Put your list of files here, preceded by 'File =', one per line
 #    or include an external list with:
 #
@@ -242,7 +242,7 @@ Job {
     Job Retention = 6 months            # six months
     AutoPrune = yes                     # Prune expired Jobs/Files
   }
-  
+
   <% if (backup_files = client['bacula']['fd']['files'])  %>
       # List of files to be backed up
       FileSet {
@@ -271,7 +271,7 @@ Job {
         FileSet = "Fileset_<%= client['bacula']['fd']['client_name'] %>"
       }
   <% end %>
-  
+
   <% if client['openldap'] && client['openldap']['slapd_type'] == "master" %>
       Job {
         Name = "Backup_<%= client['bacula']['fd']['client_name'] %>_ldap"
@@ -331,8 +331,8 @@ Job {
 # storage daemons will be called fqdn-file
 <% @bacula_storage.sort.each do |storage_daemon| %>
 Storage {
-  <% if storage_daemon['fqdn'] == node['fqdn'] -%>Name = File<% else -%>Name = <%= storage_daemon['fqdn'] %>-file<% end -%>
-# Do not use "localhost" here    
+  <% if (storage_daemon['fqdn'] == node['fqdn']) or node['dev_mode'] -%>Name = File<% else -%>Name = <%= storage_daemon['fqdn'] %>-file<% end -%>
+# Do not use "localhost" here
   Address = <%= storage_daemon['bacula']['sd']['address'] %>                # N.B. Use a fully qualified name here
   SDPort = 9103
   Password = "<%= storage_daemon['bacula']['sd']['password'] %>"
@@ -359,7 +359,7 @@ Storage {
 Catalog {
   Name = MyCatalog
 # Uncomment the following line if you want the dbi driver
-# dbdriver = "dbi:sqlite3"; dbaddress = 127.0.0.1; dbport =  
+# dbdriver = "dbi:sqlite3"; dbaddress = 127.0.0.1; dbport =
   dbname = "<%= node['bacula']['mysql_user'] %>"; DB Address = "localhost"; dbuser = "<%= node['bacula']['mysql_user'] %>"; dbpassword = "<%= node['bacula']['mysql_password'] %>"
 }
 
@@ -374,7 +374,7 @@ Messages {
 #  What this does is, it sets the email address that emails would display
 #  in the FROM field, which is by default the same email as they're being
 #  sent to.  However, if you send email to more than one address, then
-#  you'll have to set the FROM address manually, to a single address. 
+#  you'll have to set the FROM address manually, to a single address.
 #  for example, a 'no-reply@mydomain.com', is better since that tends to
 #  tell (most) people that its coming from an automated source.
 

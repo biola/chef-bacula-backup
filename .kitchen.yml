@@ -17,10 +17,11 @@ platforms:
 
 suites:
 - name: server_with_storage
-  run_list: 
+  run_list:
     - bacula-backup::storage
     - bacula-backup::server
-  attributes: 
+  attributes:
+    dev_mode: true
     mysql:
       server_debian_password: test
       server_root_password: test
@@ -28,21 +29,22 @@ suites:
   excludes:
     - centos-5.10
 - name: client
-  run_list: 
+  run_list:
     - bacula-backup::client
   attributes: {}
 - name: monitor
-  run_list: 
+  run_list:
     - bacula-backup::server
     - bacula-backup::bat
-  attributes: {}
+  attributes:
+    dev_mode: true
   excludes:
     - centos-5.10
 - name: server_with_tape_storage
-  run_list: 
+  run_list:
     - bacula-backup::storage
     - bacula-backup::server
-  attributes: 
+  attributes:
     bacula:
       dir:
         pools: [
