@@ -6,7 +6,7 @@ description      'Installs and autoconfigures bacula backup system'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 source_url       'https://github.com/biola/chef-bacula-backup'
 issues_url       'https://github.com/biola/chef-bacula-backup/issues'
-version          '1.7.3'
+version          '1.7.4'
 
 %w{ ubuntu debian redhat windows }.each do |os|
   supports os
