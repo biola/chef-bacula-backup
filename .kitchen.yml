@@ -31,7 +31,8 @@ suites:
 - name: client
   run_list:
     - bacula-backup::client
-  attributes: {}
+  attributes:
+    dev_mode: true
 - name: monitor
   run_list:
     - bacula-backup::server
