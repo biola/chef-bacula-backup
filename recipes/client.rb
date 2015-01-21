@@ -38,6 +38,15 @@ when 'rhel'
     source "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['libfastlz_url'].split('/').last}"
   end
   
+  # If a previous version of this cookbook installed v13.2, we won't be
+  # able to install the last packages individually. Check for the old
+  # version and remove it first.
+  current_pkg = Mixlib::ShellOut.new('yum list bareos-filedaemon')
+  current_pkg.run_command
+  if current_pkg.stdout.include?('13.2.2-7.1.el5') and !node['bacula']['fd']['packages']['bareosfd_url'].include?('13.2.2-7.1.el5')
+    execute 'yum -y erase bareos-filedaemon bareos-common'
+  end
+  
   remote_file "#{Chef::Config[:file_cache_path]}/#{node['bacula']['fd']['packages']['bareoscommon_url'].split('/').last}" do
     source node['bacula']['fd']['packages']['bareoscommon_url']
     checksum node['bacula']['fd']['packages']['bareoscommon_checksum']
