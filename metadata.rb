@@ -6,14 +6,16 @@ description      'Installs and autoconfigures bacula backup system'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 source_url       'https://github.com/biola/chef-bacula-backup'
 issues_url       'https://github.com/biola/chef-bacula-backup/issues'
-version          '1.8.0'
+version          '1.8.1'
 
 %w{ ubuntu debian redhat windows }.each do |os|
   supports os
 end
 
-depends        'mysql', '~> 5.5'
+depends          'database', '< 4.0'
+depends          'mysql', '~> 5.5'
+depends          'mysql-chef_gem', '~> 0.0.2'
 
-%w{ openssl database windows }.each do |dep|
+%w{ openssl windows }.each do |dep|
   depends dep
 end
