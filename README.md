@@ -104,6 +104,13 @@ Set files to be backed up (see Usage below)
 node['bacula']['fd']['files']
 ```
 
+[Client side encryption](http://www.bacula.org/5.2.x-manuals/en/main/main/Data_Encryption.html) can be enabled with the attributes:
+```ruby
+node['bacula']['fd']['encrypt_backups'] = true
+node['bacula']['fd']['pki_masterkey_public'] = "-----BEGIN CERTIFICATE-----\nMII..."
+```
+When `encrypt_backups` is set to `true`, a SSL keypair is generated automatically for the client (you should back this up separately). If `pki_masterkey_public` is populated with a public key, it will be deployed to the client as well.
+
 **storage.rb**
 
 Set up destination of File-Storage

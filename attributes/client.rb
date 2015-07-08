@@ -1,5 +1,8 @@
 default['bacula']['fd']['address'] = node['ipaddress']
 default['bacula']['fd']['client_name'] = node['fqdn']
+default['bacula']['fd']['encrypt_backups'] = false
+default['bacula']['fd']['pki_masterkey_public'] = false
+default['bacula']['fd']['pki_subject'] = '/C=US/ST=California/L=San Francisco/O=BaculaClient/OU=BaculaOperators'
 
 case node['platform_family']
 when 'rhel'

@@ -64,10 +64,16 @@ when 'rhel'
   end
   
   clientservice = 'bareos-fd'
+  config_dir = '/etc/bacula'
   templatefile = '/etc/bareos/bareos-fd.conf'
+  pki_keypair_location = '/etc/bacula/bacula-fd.pem'
+  pki_masterkey_location = '/etc/bacula/masterkey.pem'
 when 'windows'
   clientservice = 'Bacula-fd'
+  config_dir = 'c:/program files/bacula'
   templatefile = 'c:/program files/bacula/bacula-fd.conf'
+  pki_keypair_location = '"C:\\\\Program Files\\\\Bacula\\\\bacula-fd.pem"'
+  pki_masterkey_location = '"C:\\\\Program Files\\\\Bacula\\\\masterkey.pem"'
   # Using the windows cookbook lwrp to install the fd, as they are distributed as EXEs
   include_recipe 'windows::default'
   windows_package node['bacula']['fd']['packages']['win_displayname'] do
@@ -86,7 +92,10 @@ else
   package "bacula-client"
   
   clientservice = 'bacula-fd'
+  config_dir = '/etc/bacula'
   templatefile = '/etc/bacula/bacula-fd.conf'
+  pki_keypair_location = '/etc/bacula/bacula-fd.pem'
+  pki_masterkey_location = '/etc/bacula/masterkey.pem'
 end
 
 service clientservice do
@@ -97,13 +106,80 @@ end
 node.set_unless['bacula']['fd']['password'] = secure_password
 node.set_unless['bacula']['fd']['password_monitor'] = secure_password
 
+# Encryption support
+if node['bacula']['fd']['encrypt_backups']
+  unless File.exist?("#{config_dir}/bacula-fd.pem")
+    require 'openssl'
+    key = OpenSSL::PKey::RSA.new(2048)
+    public_key = key.public_key
+    subject = node['bacula']['fd']['pki_subject']
+    subject += "/CN=#{node['fqdn']}" unless subject.include?('/CN=')
+    cert = OpenSSL::X509::Certificate.new
+    cert.subject = cert.issuer = OpenSSL::X509::Name.parse(subject)
+    cert.not_before = Time.now
+    cert.not_after = Time.now + 365 * 24 * 60 * 60
+    cert.public_key = public_key
+    cert.serial = 0x0
+    cert.version = 2
+    ef = OpenSSL::X509::ExtensionFactory.new
+    ef.subject_certificate = cert
+    ef.issuer_certificate = cert
+    cert.extensions = [
+      ef.create_extension("basicConstraints", "CA:TRUE", true),
+      ef.create_extension("subjectKeyIdentifier", "hash"),
+      ef.create_extension("keyUsage", "cRLSign,keyCertSign", true)
+    ]
+    cert.add_extension ef.create_extension("authorityKeyIdentifier",
+                                           "keyid:always,issuer:always")
+
+    cert.sign key, OpenSSL::Digest::SHA256.new
+
+    keypair = "#{key}#{cert.to_pem}"
+
+    file "#{config_dir}/bacula-fd.pem" do
+      content keypair
+      unless node['platform_family'] == 'windows'
+        group node['bacula']['group']
+        mode 0640
+      end
+      action :create_if_missing
+      sensitive true
+    end
+  end
+
+  # Deploy the master key (public key only) from attribute if defined
+  if !File.exist?("#{config_dir}/masterkey.pem") &&
+     node['bacula']['fd']['pki_masterkey_public']
+    masterkey_public = node['bacula']['fd']['pki_masterkey_public']
+    masterkey_public << "\n" unless masterkey_public.end_with?("\n")
+    file "#{config_dir}/masterkey.pem" do
+      content masterkey_public
+      unless node['platform_family'] == 'windows'
+        group node['bacula']['group']
+        mode 0640
+      end
+      action :create_if_missing
+    end
+  elsif !File.exist?("#{config_dir}/masterkey.pem")
+    # Override the location here so it isn't defined in the configuration file
+    pki_masterkey_location = false
+  end
+
+end
+
 template templatefile do
   unless node['platform_family'] == 'windows'
-    group node['bacula']['group'] 
+    group node['bacula']['group']
     mode 0640
   end
   source 'bacula-fd.conf.erb'
   notifies :restart, "service[#{clientservice}]"
+  if node['bacula']['fd']['encrypt_backups']
+    variables(
+     pki_keypair_location: pki_keypair_location,
+     pki_masterkey_location: pki_masterkey_location
+    )
+  end
 end
 
 # FIXME - commenting these out for now so they aren't deployed everywhere
