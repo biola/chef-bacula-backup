@@ -28,7 +28,9 @@ Central backup server
 ```ruby
 bacula-backup::client
 ```
-Used by each client to be backed up. Currently supports Ubuntu 12.04/14.04, RHEL/CentOS 5, and MS Windows.
+Used by each client to be backed up. Currently supports Ubuntu 12.04/14.04, RHEL/CentOS 5, MS Windows, and OS X.
+
+NOTE: OS X support still needs improvement. Currently, the bacula-fd process will need to be manually killed if any changes to the bacula-fd configuration are made.
 
 ### Bacula Storage Daemon (bacula-sd)
 ```ruby

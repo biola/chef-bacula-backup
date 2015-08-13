@@ -88,6 +88,26 @@ when 'windows'
     options "/S"
     installer_type :custom
   end
+when 'mac_os_x'
+  include_recipe 'homebrew::default'
+
+  # roll back formula to 5.2 to match current debian bacula version
+  # v7 client will not work properly with v5 dir/sd
+  remote_file '/usr/local/Library/Formula/bacula-fd.rb' do
+    source 'https://raw.githubusercontent.com/Homebrew/homebrew/'\
+           '401cbaa9949086f5d6269e0fd4ce637cc9ac19df/Library/Formula/'\
+           'bacula-fd.rb'
+    checksum '67882d7509793760054c4f81f18e8f1a90a9477e85ef6b9cfbc4c78218f2365b'
+    owner node['homebrew']['owner']
+    mode 0644
+  end
+  package 'bacula-fd'
+
+  clientservice = 'bacula-fd'
+  config_dir = '/usr/local/etc'
+  templatefile = '/usr/local/etc/bacula-fd.conf'
+  pki_keypair_location = '/usr/local/etc/bacula-fd.pem'
+  pki_masterkey_location = '/usr/local/etc/masterkey.pem'
 else
   package "bacula-client"
   
@@ -101,6 +121,7 @@ end
 service clientservice do
   supports :status => true, :start => true, :stop => true, :restart => true
   action :start
+  not_if { node['platform_family'] == 'mac_os_x' }
 end
 
 node.set_unless['bacula']['fd']['password'] = secure_password
@@ -173,13 +194,22 @@ template templatefile do
     mode 0640
   end
   source 'bacula-fd.conf.erb'
-  notifies :restart, "service[#{clientservice}]"
+  unless node['platform_family'] == 'mac_os_x'
+    notifies :restart, "service[#{clientservice}]"
+  end
   if node['bacula']['fd']['encrypt_backups']
     variables(
      pki_keypair_location: pki_keypair_location,
      pki_masterkey_location: pki_masterkey_location
     )
   end
+end
+
+# FIXME: setup as an OS X service
+execute 'start_osx_baculafd' do
+  only_if { node['platform_family'] == 'mac_os_x' }
+  not_if 'ps aux | grep -i bacula-f[d]'
+  command 'bacula-fd -c /usr/local/etc/bacula-fd.conf'
 end
 
 # FIXME - commenting these out for now so they aren't deployed everywhere

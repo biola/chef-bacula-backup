@@ -35,6 +35,11 @@ when 'debian'
   default['bacula']['fd']['working_directory'] = '/var/lib/bacula'
   default['bacula']['fd']['pid_directory'] = '/var/run/bacula'
   default['bacula']['fd']['max_con_jobs'] = '20'
+
+when 'mac_os_x'
+  default['bacula']['fd']['working_directory'] = '/usr/local/var/lib/bacula'
+  default['bacula']['fd']['pid_directory'] = '/usr/local/var/run'
+  default['bacula']['fd']['max_con_jobs'] = '20'
 end
 
 
