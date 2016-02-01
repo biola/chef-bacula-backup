@@ -3,6 +3,8 @@ default['bacula']['fd']['client_name'] = node['fqdn']
 default['bacula']['fd']['encrypt_backups'] = false
 default['bacula']['fd']['pki_masterkey_public'] = false
 default['bacula']['fd']['pki_subject'] = '/C=US/ST=California/L=San Francisco/O=BaculaClient/OU=BaculaOperators'
+default['bacula']['fd']['file_retention'] = '30 days'
+default['bacula']['fd']['job_retention'] = '6 months'
 
 case node['platform_family']
 when 'rhel'
