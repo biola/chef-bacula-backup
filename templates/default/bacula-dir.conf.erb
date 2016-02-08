@@ -239,7 +239,8 @@ Job {
     Catalog = MyCatalog
     Password = "<%= client['bacula']['fd']['password'] %>"          # password for FileDaemon
     File Retention = <%= client['bacula']['fd']['file_retention'] ? client['bacula']['fd']['file_retention'] : '30 days' %>
-    Job Retention = <%= client['bacula']['fd']['job_retention'] ? client['bacula']['fd']['job_retention'] : '6 months' %>
+    Job Retention = <%= client['bacula']['fd']['job_retention'] ? client['bacula']['fd']['job_retention'] : '6 months' %><% if client['bacula']['fd']['max_concurrent_jobs'] %>
+    Maximum Concurrent Jobs = <%= client['bacula']['fd']['max_concurrent_jobs'] %><% end %>
     AutoPrune = yes                     # Prune expired Jobs/Files
   }
 
@@ -337,7 +338,8 @@ Storage {
   SDPort = 9103
   Password = "<%= storage_daemon['bacula']['sd']['password'] %>"
   Device = FileStorage
-  Media Type = File
+  Media Type = File<% if storage_daemon['bacula']['sd']['max_concurrent_jobs'] -%>
+  Maximum Concurrent Jobs = <%= storage_daemon['bacula']['sd']['max_concurrent_jobs'] %><% end -%>
 }
 
 # Any additional storage devices will be enumerated here
